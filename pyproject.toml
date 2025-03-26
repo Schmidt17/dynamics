@@ -1,0 +1,11 @@
+[project]
+name = "nonlinear"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "matplotlib>=3.7.5",
+    "pyside6>=6.6.3.1",
+    "scipy>=1.10.1",
+]
