@@ -13,16 +13,19 @@ def rhs(y, t, k, tau):
 
     # oect 1 gate
     dydt[2] = (y[0] - y[2]) / tau
-    out1 = 1 - sigmoid(y[2], 0.05, 0)
 
     # oect 2 gate
-    dydt[3] = (out1 - y[3]) / tau
+    dydt[3] = (output(y[2]) - y[3]) / tau
 
     return dydt
 
 
 def sigmoid(x, s, offset=0):
     return 1.0 / (1.0 + np.exp(-(x - offset) / s))
+
+
+def output(gate, s=0.05, offset=0):
+    return 1.0 - sigmoid(gate, s, offset)
 
 
 k = 1
@@ -35,11 +38,14 @@ ts = np.arange(0, tmax, 0.05)
 
 y_sol = sci.odeint(rhs, y0, ts, args=(k, tau))
 
-out1 = 1 - sigmoid(y_sol[:, 2], 0.05, 0)
-out2 = 1 - sigmoid(y_sol[:, 3], 0.05, 0)
+out1 = output(y_sol[:, 2])
+out2 = output(y_sol[:, 3])
+
+# add output series to y-array, for convenient plotting
 y = np.hstack((y_sol, out1.reshape(-1, 1), out2.reshape(-1, 1)))
 
 _ = phase_portrait(y, (0, 4))
+_ = phase_portrait(y, (0, 5))
 _ = phase_portrait(y, (4, 5))
 _ = time_series(ts, y)
 
