@@ -13,7 +13,7 @@ def rhs(y, t, k, tau):
 
     # oect 1 gate
     dydt[2] = (y[0] - y[2]) / tau
-    out1 = sigmoid(y[2], 0.05, 0)
+    out1 = 1 - sigmoid(y[2], 0.05, 0)
 
     # oect 2 gate
     dydt[3] = (out1 - y[3]) / tau
@@ -35,8 +35,8 @@ ts = np.arange(0, tmax, 0.05)
 
 y_sol = sci.odeint(rhs, y0, ts, args=(k, tau))
 
-out1 = sigmoid(y_sol[:, 2], 0.05, 0)
-out2 = sigmoid(y_sol[:, 3], 0.05, 0)
+out1 = 1 - sigmoid(y_sol[:, 2], 0.05, 0)
+out2 = 1 - sigmoid(y_sol[:, 3], 0.05, 0)
 y = np.hstack((y_sol, out1.reshape(-1, 1), out2.reshape(-1, 1)))
 
 _ = phase_portrait(y, (0, 4))
