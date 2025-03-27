@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.integrate as sci
+import yaml
 from plot import phase_portrait, time_series
 
 
-def rhs(y, t, k, tau):
+def rhs(y, t, k, tau, s):
     dydt = np.zeros_like(y)
 
     # simple input oscillator
@@ -15,7 +16,7 @@ def rhs(y, t, k, tau):
     dydt[2] = (y[0] - y[2]) / tau
 
     # oect 2 gate
-    dydt[3] = (output(y[2]) - y[3]) / tau
+    dydt[3] = (output(y[2], s=s) - y[3]) / tau
 
     return dydt
 
@@ -24,22 +25,27 @@ def sigmoid(x, s, offset=0):
     return 1.0 / (1.0 + np.exp(-(x - offset) / s))
 
 
-def output(gate, s=0.05, offset=0):
+def output(gate, s, offset=0):
     return 1.0 - sigmoid(gate, s, offset)
 
 
-k = 1
-tau = 0.1
+with open("params.yaml", "r") as f:
+    params = yaml.safe_load(f)["main"]
 
-tmax = 20
+k = params["system"]["k"]
+tau = params["system"]["tau"]
+s = params["system"]["s"]
 
-y0 = np.array([1, 0, 0, 0])
-ts = np.arange(0, tmax, 0.05)
+tmax = params["general"]["tmax"]
+dt = params["general"]["dt"]
 
-y_sol = sci.odeint(rhs, y0, ts, args=(k, tau))
+y0 = np.array(params["initial"]["y0"])
+ts = np.arange(0, tmax, dt)
 
-out1 = output(y_sol[:, 2])
-out2 = output(y_sol[:, 3])
+y_sol = sci.odeint(rhs, y0, ts, args=(k, tau, s))
+
+out1 = output(y_sol[:, 2], s=s)
+out2 = output(y_sol[:, 3], s=s)
 
 # add output series to y-array, for convenient plotting
 y = np.hstack((y_sol, out1.reshape(-1, 1), out2.reshape(-1, 1)))
