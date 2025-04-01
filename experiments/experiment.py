@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.integrate as sci
@@ -29,6 +31,13 @@ def output(gate, s, offset=0, off_level=0):
     return 1.0 - (1.0 - off_level) * sigmoid(gate, s, offset)
 
 
+plot_folder = Path("plots")
+phase_portrait_folder = plot_folder / "phase_portraits"
+time_series_folder = plot_folder / "time_series"
+
+phase_portrait_folder.mkdir(exist_ok=True, parents=True)
+time_series_folder.mkdir(exist_ok=True, parents=True)
+
 with open("params.yaml", "r") as f:
     params = yaml.safe_load(f)["main"]
 
@@ -51,9 +60,14 @@ out2 = output(y_sol[:, 3], s=s, off_level=off_level)
 # add output series to y-array, for convenient plotting
 y = np.hstack((y_sol, out1.reshape(-1, 1), out2.reshape(-1, 1)))
 
-_ = phase_portrait(y, (0, 4))
-_ = phase_portrait(y, (0, 5))
-_ = phase_portrait(y, (4, 5))
-_ = time_series(ts, y)
+fig1 = phase_portrait(y, (0, 4))
+fig2 = phase_portrait(y, (0, 5))
+fig3 = phase_portrait(y, (4, 5))
+fig4 = time_series(ts, y)
+
+fig1.savefig(phase_portrait_folder / "y4_y0.png")
+fig2.savefig(phase_portrait_folder / "y5_y0.png")
+fig3.savefig(phase_portrait_folder / "y5_y4.png")
+fig4.savefig(time_series_folder / "all_vars.png")
 
 plt.show()

@@ -1,0 +1,40 @@
+schema: '2.0'
+stages:
+  run_experiment:
+    cmd: uv run experiment.py
+    deps:
+    - path: ../uv.lock
+      hash: md5
+      md5: 6c6194239087c6ecfb1d6b469b96a8b6
+      size: 146146
+    - path: experiment.py
+      hash: md5
+      md5: 296b112499bc9b428adfbec48bc7781c
+      size: 1934
+    - path: plot.py
+      hash: md5
+      md5: dc90a65dd1728f3a665856d4aa4d4364
+      size: 899
+    params:
+      params.yaml:
+        main:
+          general:
+            tmax: 20
+            dt: 0.05
+          system:
+            k: 1
+            tau: 0.1
+            s: 0.05
+            off_level: 1e-06
+          initial:
+            y0:
+            - 1
+            - 0
+            - 0
+            - 0
+    outs:
+    - path: plots
+      hash: md5
+      md5: c7d0761f1a91068f0c7c27510a318675.dir
+      size: 136905
+      nfiles: 4
