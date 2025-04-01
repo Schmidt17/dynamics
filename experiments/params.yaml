@@ -7,6 +7,7 @@ main:
     k: 1
     tau: 0.1
     s: 0.05
+    off_level: 1.0e-6
 
   initial:
     y0: [1, 0, 0, 0]
