@@ -1,0 +1,9 @@
+stages:
+  run_experiment:
+    cmd: uv run experiment.py
+    deps:
+    - experiment.py
+    params:
+    - main
+    outs:
+    - plots
