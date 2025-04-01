@@ -3,6 +3,8 @@ stages:
     cmd: uv run experiment.py
     deps:
     - experiment.py
+    - plot.py
+    - ../uv.lock
     params:
     - main
     outs:
